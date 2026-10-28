@@ -11,24 +11,6 @@ from model import *  # noqa: F401, F403 (pulls in your solution functions)
 import numpy as np
 import gymnasium as gym
 
-from solution import (
-    init_q_table,
-    max_q_value,
-    greedy_action,
-    sample_random_action,
-    should_explore,
-    epsilon_greedy_action,
-    decay_epsilon,
-    td_target,
-    td_error,
-    q_learning_update,
-    interaction_step,
-    run_training_episode,
-    train_q_learning,
-    extract_greedy_policy,
-    run_greedy_episode,
-    evaluate_success_rate,
-)
 
 
 if __name__ == "__main__":

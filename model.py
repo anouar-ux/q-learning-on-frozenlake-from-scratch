@@ -131,6 +131,7 @@ def run_training_episode(env, q_table, epsilon, alpha, gamma, rng, max_steps=200
     final_reward=0
 
     while steps<max_steps:
+        steps+=1
         next_state, reward, done =interaction_step(env, q_table, state, epsilon, alpha, gamma, rng)
         final_reward+=reward
         if done:
@@ -158,7 +159,7 @@ def train_q_learning(env, num_episodes, alpha=0.8, gamma=0.95, epsilon_start=1.0
     epsilon=epsilon_start
 
     for _ in range(num_episodes):
-        reward=run_training_episode(env, q_table, epsilon, alpha, gamma, rng, max_steps=200)
+        reward=run_training_episode(env, q_table, epsilon, alpha, gamma, rng, max_steps=max_steps)
         epsilon=decay_epsilon(epsilon, epsilon_decay, epsilon_min)
         episode_returns.append(reward)
 
@@ -189,6 +190,7 @@ def run_greedy_episode(env, policy, seed=None, max_steps=200):
     state, info=env.reset(seed=seed)
     steps=0
     done=False
+    reward=0
     while steps<max_steps:
         steps+=1
         action=policy[state]
@@ -207,13 +209,11 @@ def run_greedy_episode(env, policy, seed=None, max_steps=200):
 def evaluate_success_rate(env, policy, num_episodes, seed=0, max_steps=200):
     # TODO: run num_episodes greedy rollouts and return the fraction that reached the goal.
     fraction=0
-    while seed<num_episodes:
+    for k in range(num_episodes):
+        episode_seed=seed+k
+        env.action_space.seed(episode_seed)
 
-        env.action_space.seed(seed)
-        env.reset(seed=seed)
-        
-        Bool=run_greedy_episode(env, policy, seed, max_steps)
-        seed+=1
+        Bool=run_greedy_episode(env, policy, episode_seed, max_steps)
         if Bool:
             fraction+=1
 
